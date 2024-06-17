@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using whisper_gui.ViewModels;
 using Wpf.Ui.Controls;
 
 namespace whisper_gui.Views
@@ -24,6 +25,7 @@ namespace whisper_gui.Views
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = new MainWindowViewModel();
         }
     }
 }
