@@ -12,94 +12,162 @@
                  d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
                  WindowStyle="None"
                  mc:Ignorable="d">
-    <StackPanel>
-        <ui:TitleBar Title="Whiser GUI" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
-        <StackPanel Margin="15,0,15,0">
-            <Label Content="Options" FontWeight="Bold" />
+        <StackPanel Grid.Row="0">
+            <ui:TitleBar Title="Whiser GUI" />
 
-            <ui:Card Margin="0,5,0,0">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
+            <StackPanel Margin="15,0,15,0">
+                <Label Content="Options" FontWeight="Bold" />
 
-                    <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon FontSize="24" Symbol="Globe32" />
-                        <Label Margin="10,0,0,0"
-                               VerticalAlignment="Center"
-                               Content="Language"
-                               FontWeight="Bold" />
-                    </StackPanel>
-
-                    <ComboBox Grid.Column="1"
-                              HorizontalAlignment="Right"
-                              ItemsSource="{Binding WhisperLanguages}"
-                              SelectedItem="{Binding SelectedLanguage, UpdateSourceTrigger=PropertyChanged}" />
-                </Grid>
-            </ui:Card>
-
-            <ui:Card>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="200" />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon FontSize="24" Symbol="Database32" />
-                        <Label Margin="10,0,0,0"
-                               VerticalAlignment="Center"
-                               Content="Model"
-                               FontWeight="Bold" />
-                    </StackPanel>
-
-                    <ComboBox Grid.Column="1"
-                              HorizontalAlignment="Right"
-                              ItemsSource="{Binding WhisperModels}"
-                              SelectedItem="{Binding SelectedModel, UpdateSourceTrigger=PropertyChanged}" />
-                </Grid>
-            </ui:Card>
-
-            <Label Margin="0,15,0,0"
-                   Content="List"
-                   FontWeight="Bold" />
-
-            <ui:Card Margin="0,5,0,0">
-                <StackPanel>
+                <ui:Card Margin="0,5,0,0" IsEnabled="{Binding IsOptionEnabled}">
                     <Grid>
-                        <ui:Button Command="{Binding OpenFilesCommand}" Content="Open File(s)" />
-                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                            <ui:Button Appearance="Primary" Content="Start" />
-                            <ui:Button Margin="10,0,0,0" Content="Stop" />
-                        </StackPanel>
-                    </Grid>
-                    <ui:ListView Margin="0,15,0,0" ItemsSource="{Binding WhisperTasks}">
-                        <ui:ListView.View>
-                            <ui:GridView>
-                                <ui:GridViewColumn x:Name="col_FileName"
-                                                   Width="{Binding ElementName=helperGrid, Path=ActualWidth}"
-                                                   DisplayMemberBinding="{Binding Path=FileName}"
-                                                   Header="File Name" />
-                                <ui:GridViewColumn x:Name="col_Status"
-                                                   Width="100"
-                                                   DisplayMemberBinding="{Binding Path=Status}"
-                                                   Header="Status" />
-                            </ui:GridView>
-                        </ui:ListView.View>
-                    </ui:ListView>
-
-                    <Grid Visibility="Hidden">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{Binding ElementName=col_Status, Path=ActualWidth}" />
+                            <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
 
-                        <Grid x:Name="helperGrid" Grid.Column="1" />
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon FontSize="24" Symbol="Globe32" />
+                            <Label Margin="10,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Content="Language"
+                                   FontWeight="Bold" />
+                        </StackPanel>
+
+                        <ComboBox Grid.Column="1"
+                                  HorizontalAlignment="Right"
+                                  ItemsSource="{Binding WhisperLanguages}"
+                                  SelectedItem="{Binding SelectedLanguage, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
-                </StackPanel>
-            </ui:Card>
+                </ui:Card>
+
+                <ui:Card IsEnabled="{Binding IsOptionEnabled}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="200" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon FontSize="24" Symbol="Database32" />
+                            <Label Margin="10,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Content="Model"
+                                   FontWeight="Bold" />
+                        </StackPanel>
+
+                        <ComboBox Grid.Column="1"
+                                  HorizontalAlignment="Right"
+                                  ItemsSource="{Binding WhisperModels}"
+                                  SelectedItem="{Binding SelectedModel, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </ui:Card>
+
+                <ui:Card IsEnabled="{Binding IsOptionEnabled}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon FontSize="24" Symbol="Folder32" />
+                            <Label Margin="10,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Content="Output Directory"
+                                   FontWeight="Bold" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="{Binding OutputDirectory, UpdateSourceTrigger=PropertyChanged}" />
+                            <ui:Button Margin="10,0,0,0"
+                                       HorizontalAlignment="Right"
+                                       Command="{Binding BrowseOutputDirectoryCommand}"
+                                       Content="..." />
+                        </StackPanel>
+                    </Grid>
+                </ui:Card>
+            </StackPanel>
         </StackPanel>
-    </StackPanel>
+
+        <Grid Grid.Row="1" Margin="15,0,15,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0"
+                   Margin="0,15,0,0"
+                   Content="List"
+                   FontWeight="Bold" />
+
+            <Grid Grid.Row="1" Margin="0,5,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <ui:Button Command="{Binding OpenFilesCommand}" Content="Open File(s)" />
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                        <ui:Button Appearance="Primary"
+                                   Command="{Binding StartCommand}"
+                                   Content="Start"
+                                   IsEnabled="{Binding IsStartButtonEnabled}" />
+                        <ui:Button Margin="10,0,0,0"
+                                   Command="{Binding StopCommand}"
+                                   Content="Stop"
+                                   IsEnabled="{Binding IsStopButtonEnabled}" />
+                    </StackPanel>
+                </Grid>
+
+                <ui:ListView Grid.Row="1"
+                             Margin="0,15,0,15"
+                             ItemsSource="{Binding WhisperTasks}">
+                    <ui:ListView.View>
+                        <ui:GridView>
+                            <ui:GridViewColumn x:Name="col_FileName"
+                                               Width="{Binding ElementName=helperGrid, Path=ActualWidth}"
+                                               DisplayMemberBinding="{Binding Path=FileName}"
+                                               Header="File Name" />
+                            <ui:GridViewColumn x:Name="col_Status"
+                                               Width="100"
+                                               DisplayMemberBinding="{Binding Path=Status}"
+                                               Header="Status" />
+                            <ui:GridViewColumn x:Name="col_Action"
+                                               Width="80"
+                                               Header="Action">
+                                <ui:GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="Delete" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ui:GridViewColumn.CellTemplate>
+                            </ui:GridViewColumn>
+                        </ui:GridView>
+                    </ui:ListView.View>
+                </ui:ListView>
+
+                <Grid Grid.Row="1"
+                      Margin="15"
+                      Visibility="Hidden">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="{Binding ElementName=col_Status, Path=ActualWidth}" />
+                        <ColumnDefinition Width="{Binding ElementName=col_Action, Path=ActualWidth}" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid x:Name="helperGrid" Grid.Column="0" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
 </ui:FluentWindow>
