@@ -14,6 +14,12 @@ namespace whisper_gui.Enums
         Failed
     }
 
+    public enum WhisperDevices
+    {
+        cpu,
+        cuda
+    }
+
     public enum WhisperModels
     {
         tiny,

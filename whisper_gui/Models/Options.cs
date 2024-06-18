@@ -10,6 +10,7 @@ namespace whisper_gui.Models
 
         public WhisperLanguages SelectedLanguage { get; set; }
         public WhisperModels SelectedModel { get; set; }
+        public WhisperDevices SelectedDevice { get; set; }
         public string PythonPath { get; set; }
         public string OutputDirectory { get; set; }
 
@@ -17,6 +18,7 @@ namespace whisper_gui.Models
         {
             SelectedLanguage = WhisperLanguages.Japanese;
             SelectedModel = WhisperModels.medium;
+            SelectedDevice = WhisperDevices.cpu;
 
             OutputDirectory = Directory.GetCurrentDirectory();
 
@@ -43,6 +45,7 @@ namespace whisper_gui.Models
                     var options = JsonSerializer.Deserialize<Options>(jsonString);
                     SelectedLanguage = options.SelectedLanguage;
                     SelectedModel = options.SelectedModel;
+                    SelectedDevice = options.SelectedDevice;
                     PythonPath = options.PythonPath;
                     OutputDirectory = options.OutputDirectory;
                 }

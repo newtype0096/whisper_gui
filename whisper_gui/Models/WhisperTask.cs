@@ -49,6 +49,7 @@ namespace whisper_gui.Models
             string arguments = $"-m whisper \"{FileName}\" " +
                 $"--language {GlobalData.Options.SelectedLanguage} " +
                 $"--model {GlobalData.Options.SelectedModel} " +
+                $"--device {GlobalData.Options.SelectedDevice} " +
                 $"--output_dir \"{GlobalData.Options.OutputDirectory}\"";
 
             var startInfo = new ProcessStartInfo()

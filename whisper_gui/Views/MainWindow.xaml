@@ -82,6 +82,28 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
+                            <ColumnDefinition Width="200" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon FontSize="24" Symbol="Database32" />
+                            <Label Margin="10,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Content="Device"
+                                   FontWeight="Bold" />
+                        </StackPanel>
+
+                        <ComboBox Grid.Column="1"
+                                  HorizontalAlignment="Right"
+                                  ItemsSource="{Binding WhisperDevices}"
+                                  SelectedItem="{Binding SelectedDevice, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </ui:Card>
+
+                <ui:Card IsEnabled="{Binding IsOptionEnabled}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 

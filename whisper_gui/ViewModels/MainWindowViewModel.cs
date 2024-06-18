@@ -21,6 +21,7 @@ namespace whisper_gui.ViewModels
 
         public List<WhisperLanguages> WhisperLanguages { get; }
         public List<WhisperModels> WhisperModels { get; }
+        public List<WhisperDevices> WhisperDevices { get; }
 
         private WhisperLanguages _selectedLanguage;
         public WhisperLanguages SelectedLanguage
@@ -34,6 +35,19 @@ namespace whisper_gui.ViewModels
                 GlobalData.Options.SaveFile();
             }
 
+        }
+
+        private WhisperDevices _selectedDevice;
+        public WhisperDevices SelectedDevice
+        {
+            get => _selectedDevice;
+            set
+            {
+                SetProperty(ref _selectedDevice, value);
+
+                GlobalData.Options.SelectedDevice = value;
+                GlobalData.Options.SaveFile();
+            }
         }
 
         private WhisperModels _selectedModel;
@@ -111,9 +125,11 @@ namespace whisper_gui.ViewModels
         {
             WhisperLanguages = new List<WhisperLanguages>(Enum.GetValues(typeof(WhisperLanguages)).Cast<WhisperLanguages>());
             WhisperModels = new List<WhisperModels>(Enum.GetValues(typeof(WhisperModels)).Cast<WhisperModels>());
+            WhisperDevices = new List<WhisperDevices>(Enum.GetValues(typeof(WhisperDevices)).Cast<WhisperDevices>());
 
             SelectedLanguage = GlobalData.Options.SelectedLanguage;
             SelectedModel = GlobalData.Options.SelectedModel;
+            SelectedDevice = GlobalData.Options.SelectedDevice;
             PythonPath = GlobalData.Options.PythonPath;
             OutputDirectory = GlobalData.Options.OutputDirectory;
 
@@ -201,6 +217,10 @@ namespace whisper_gui.ViewModels
             lock (_cs)
             {
                 WhisperTasks.Remove(task);
+                if (!WhisperTasks.Any())
+                {
+                    Started = false;
+                }
             }
         }
 
