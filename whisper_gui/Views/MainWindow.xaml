@@ -9,7 +9,7 @@
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
                  xmlns:viewModels="clr-namespace:whisper_gui.ViewModels"
                  x:Name="FluentWindow"
-                 Title="MainWindow"
+                 Title="Whisper GUI"
                  Width="800"
                  Height="600"
                  WindowStyle="None"
