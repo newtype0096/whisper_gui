@@ -60,8 +60,13 @@ namespace whisper_gui.Models
                 CreateNoWindow = true,
                 UseShellExecute = false,
                 RedirectStandardError = true,
-                RedirectStandardOutput = true
+                RedirectStandardOutput = true,
+                StandardErrorEncoding = Encoding.UTF8,
+                StandardOutputEncoding = Encoding.UTF8
             };
+            startInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+            startInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "True";
+
             GlobalData.LogViewer.WriteLine($"------------------------------------------", LogViewerLib.StringStyleEnum.errorText);
             GlobalData.LogViewer.WriteLine($"{startInfo.FileName} {startInfo.Arguments}");
 

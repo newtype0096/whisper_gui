@@ -223,11 +223,12 @@ namespace whisper_gui.ViewModels
 
         private void OnStart()
         {
+            GlobalData.LogViewer.WriteLine("----- Started -----", LogViewerLib.StringStyleEnum.header1);
+
             _taskManager = new Thread(TaskManagerThreadProc);
             _taskManager.Start(this);
 
             Started = true;
-            GlobalData.LogViewer.WriteLine("----- Started -----", LogViewerLib.StringStyleEnum.header1);
         }
 
         private void OnStop()

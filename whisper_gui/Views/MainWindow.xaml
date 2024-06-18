@@ -32,9 +32,8 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition MinHeight="300" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition MinHeight="150" MaxHeight="300" />
+                    <RowDefinition Height="2*" />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Margin="15,0,15,0">
@@ -263,14 +262,9 @@
                     </Grid>
                 </Grid>
 
-                <GridSplitter Grid.Row="2"
-                              Height="15"
-                              HorizontalAlignment="Stretch"
-                              Background="Transparent" />
-
                 <log:LogViewer x:Name="LogViewer"
-                               Grid.Row="3"
-                               Margin="15,0,15,15"
+                               Grid.Row="2"
+                               Margin="15,15,15,15"
                                Background="Transparent"
                                Foreground="White"
                                TimeStampFormat="yyyy/MM/dd H:mm:ss" />
