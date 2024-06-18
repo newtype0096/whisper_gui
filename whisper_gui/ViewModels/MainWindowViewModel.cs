@@ -21,6 +21,7 @@ namespace whisper_gui.ViewModels
         public List<WhisperLanguages> WhisperLanguages { get; }
         public List<WhisperModels> WhisperModels { get; }
         public List<WhisperDevices> WhisperDevices { get; }
+        public List<WhisperOutputFormats> WhisperOutputFormats { get; }
 
         private string _optionSummary;
         public string OptionSummary
@@ -39,7 +40,7 @@ namespace whisper_gui.ViewModels
 
                 GlobalData.Options.SelectedLanguage = value;
                 GlobalData.Options.SaveFile();
-                OptionSummary = $"Whisper Options - {GlobalData.Options.SelectedLanguage}, {GlobalData.Options.SelectedModel}, {GlobalData.Options.SelectedDevice}";
+                OptionSummary = $"Whisper Options - {GlobalData.Options.SelectedLanguage}, {GlobalData.Options.SelectedModel}, {GlobalData.Options.SelectedDevice}, {GlobalData.Options.SelectedOutputFormat}";
             }
         }
 
@@ -53,7 +54,7 @@ namespace whisper_gui.ViewModels
 
                 GlobalData.Options.SelectedDevice = value;
                 GlobalData.Options.SaveFile();
-                OptionSummary = $"Whisper Options - {GlobalData.Options.SelectedLanguage}, {GlobalData.Options.SelectedModel}, {GlobalData.Options.SelectedDevice}";
+                OptionSummary = $"Whisper Options - {GlobalData.Options.SelectedLanguage}, {GlobalData.Options.SelectedModel}, {GlobalData.Options.SelectedDevice}, {GlobalData.Options.SelectedOutputFormat}";
             }
         }
 
@@ -67,7 +68,21 @@ namespace whisper_gui.ViewModels
 
                 GlobalData.Options.SelectedModel = value;
                 GlobalData.Options.SaveFile();
-                OptionSummary = $"Whisper Options - {GlobalData.Options.SelectedLanguage}, {GlobalData.Options.SelectedModel}, {GlobalData.Options.SelectedDevice}";
+                OptionSummary = $"Whisper Options - {GlobalData.Options.SelectedLanguage}, {GlobalData.Options.SelectedModel}, {GlobalData.Options.SelectedDevice}, {GlobalData.Options.SelectedOutputFormat}";
+            }
+        }
+
+        private WhisperOutputFormats _selectedOutputFormat;
+        public WhisperOutputFormats SelectedOutputFormat
+        {
+            get => _selectedOutputFormat;
+            set
+            {
+                SetProperty(ref _selectedOutputFormat, value);
+
+                GlobalData.Options.SelectedOutputFormat = value;
+                GlobalData.Options.SaveFile();
+                OptionSummary = $"Whisper Options - {GlobalData.Options.SelectedLanguage}, {GlobalData.Options.SelectedModel}, {GlobalData.Options.SelectedDevice}, {GlobalData.Options.SelectedOutputFormat}";
             }
         }
 
@@ -134,11 +149,13 @@ namespace whisper_gui.ViewModels
             WhisperLanguages = new List<WhisperLanguages>(Enum.GetValues(typeof(WhisperLanguages)).Cast<WhisperLanguages>());
             WhisperModels = new List<WhisperModels>(Enum.GetValues(typeof(WhisperModels)).Cast<WhisperModels>());
             WhisperDevices = new List<WhisperDevices>(Enum.GetValues(typeof(WhisperDevices)).Cast<WhisperDevices>());
+            WhisperOutputFormats = new List<WhisperOutputFormats>(Enum.GetValues(typeof(WhisperOutputFormats)).Cast<WhisperOutputFormats>());
 
-            OptionSummary = $"Whisper Options - {GlobalData.Options.SelectedLanguage}, {GlobalData.Options.SelectedModel}, {GlobalData.Options.SelectedDevice}";
+            OptionSummary = $"Whisper Options - {GlobalData.Options.SelectedLanguage}, {GlobalData.Options.SelectedModel}, {GlobalData.Options.SelectedDevice}, {GlobalData.Options.SelectedOutputFormat}";
             SelectedLanguage = GlobalData.Options.SelectedLanguage;
             SelectedModel = GlobalData.Options.SelectedModel;
             SelectedDevice = GlobalData.Options.SelectedDevice;
+            SelectedOutputFormat = GlobalData.Options.SelectedOutputFormat;
             PythonPath = GlobalData.Options.PythonPath;
             OutputDirectory = GlobalData.Options.OutputDirectory;
 
@@ -263,7 +280,11 @@ namespace whisper_gui.ViewModels
             {
                 foreach (var task in vm.WhisperTasks)
                 {
-                    task.Stop();
+                    if (!task.Status.Equals(Status.Completed))
+                    {
+                        task.Stop();
+                        task.Status = Status.Stopped;
+                    }
                 }
             }
         }

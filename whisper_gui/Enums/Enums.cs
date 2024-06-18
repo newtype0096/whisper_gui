@@ -11,9 +11,19 @@ namespace whisper_gui.Enums
         Pending,
         Processing,
         Completed,
-        Failed
+        Failed,
+        Stopped
     }
 
+    public enum WhisperOutputFormats
+    {
+        txt,
+        vtt,
+        srt,
+        tsv,
+        json,
+        all
+    }
     public enum WhisperDevices
     {
         cpu,

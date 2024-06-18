@@ -50,6 +50,7 @@ namespace whisper_gui.Models
                 $"--language {GlobalData.Options.SelectedLanguage} " +
                 $"--model {GlobalData.Options.SelectedModel} " +
                 $"--device {GlobalData.Options.SelectedDevice} " +
+                $"--output_format {GlobalData.Options.SelectedOutputFormat} " +
                 $"--output_dir \"{GlobalData.Options.OutputDirectory}\"";
 
             var startInfo = new ProcessStartInfo()
@@ -61,6 +62,7 @@ namespace whisper_gui.Models
                 RedirectStandardError = true,
                 RedirectStandardOutput = true
             };
+            GlobalData.LogViewer.WriteLine($"------------------------------------------", LogViewerLib.StringStyleEnum.errorText);
             GlobalData.LogViewer.WriteLine($"{startInfo.FileName} {startInfo.Arguments}");
 
             _process = new Process();
@@ -85,6 +87,7 @@ namespace whisper_gui.Models
 
             _process.Exited += (s, e) =>
             {
+                GlobalData.LogViewer.WriteLine($"------------------------------------------", LogViewerLib.StringStyleEnum.errorText);
                 Status = Status.Completed;
             };
 
