@@ -8,10 +8,10 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
                  xmlns:viewModels="clr-namespace:whisper_gui.ViewModels"
+                 x:Name="FluentWindow"
                  Title="MainWindow"
                  Width="750"
                  Height="800"
-                 d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
                  WindowStyle="None"
                  mc:Ignorable="d">
     <bh:Interaction.Triggers>
@@ -184,7 +184,10 @@
                                 <ui:GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <ui:Button Appearance="Danger" Content="Delete" />
+                                            <ui:Button Appearance="Danger"
+                                                       Command="{Binding DataContext.DeleteCommand, ElementName=FluentWindow}"
+                                                       CommandParameter="{Binding}"
+                                                       Content="Delete" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ui:GridViewColumn.CellTemplate>

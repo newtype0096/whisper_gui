@@ -36,7 +36,7 @@ namespace whisper_gui.Models
 
         public void Stop()
         {
-            if (_process?.HasExited == true)
+            if (_process?.HasExited != true)
             {
                 _process?.Kill();
             }
@@ -46,8 +46,10 @@ namespace whisper_gui.Models
 
         private void RunWhisper()
         {
-            //string arguments = $"-m whisper {FileName} --language {GlobalData.Options.SelectedLanguage} --model {GlobalData.Options.SelectedModel}";
-            string arguments = $"-m whisper";
+            string arguments = $"-m whisper \"{FileName}\" " +
+                $"--language {GlobalData.Options.SelectedLanguage} " +
+                $"--model {GlobalData.Options.SelectedModel} " +
+                $"--output_dir \"{GlobalData.Options.OutputDirectory}\"";
 
             var startInfo = new ProcessStartInfo()
             {
@@ -55,7 +57,8 @@ namespace whisper_gui.Models
                 Arguments = arguments,
                 CreateNoWindow = true,
                 UseShellExecute = false,
-                RedirectStandardError = true
+                RedirectStandardError = true,
+                RedirectStandardOutput = true
             };
             GlobalData.LogViewer.WriteLine($"{startInfo.FileName} {startInfo.Arguments}");
 
@@ -71,6 +74,14 @@ namespace whisper_gui.Models
                 }
             };
 
+            _process.OutputDataReceived += (s, e) =>
+            {
+                if (!string.IsNullOrEmpty(e.Data))
+                {
+                    GlobalData.LogViewer.WriteLine(e.Data, LogViewerLib.StringStyleEnum.label);
+                }
+            };
+
             _process.Exited += (s, e) =>
             {
                 Status = Status.Completed;
@@ -78,7 +89,7 @@ namespace whisper_gui.Models
 
             _process.Start();
             _process.BeginErrorReadLine();
-            _process.WaitForExit();
+            _process.BeginOutputReadLine();
         }
     }
 }

@@ -105,6 +105,7 @@ namespace whisper_gui.ViewModels
         public RelayCommand OpenFilesCommand { get; }
         public RelayCommand StartCommand { get; }
         public RelayCommand StopCommand { get; }
+        public RelayCommand<WhisperTask> DeleteCommand { get; }
 
         public MainWindowViewModel()
         {
@@ -122,6 +123,7 @@ namespace whisper_gui.ViewModels
             OpenFilesCommand = new RelayCommand(OnOpenFiles);
             StartCommand = new RelayCommand(OnStart);
             StopCommand = new RelayCommand(OnStop);
+            DeleteCommand = new RelayCommand<WhisperTask>(OnDelete);
         }
 
         private void OnClosed()
@@ -192,6 +194,16 @@ namespace whisper_gui.ViewModels
             _taskManager?.Join();
         }
 
+        private void OnDelete(WhisperTask task)
+        {
+            task.Stop();
+
+            lock (_cs)
+            {
+                WhisperTasks.Remove(task);
+            }
+        }
+
         private static void TaskManagerThreadProc(object param)
         {
             var vm = (MainWindowViewModel)param;
@@ -216,6 +228,14 @@ namespace whisper_gui.ViewModels
                 }
 
                 Thread.Sleep(100);
+            }
+
+            lock (vm._cs)
+            {
+                foreach (var task in vm.WhisperTasks)
+                {
+                    task.Stop();
+                }
             }
         }
     }
