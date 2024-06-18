@@ -3,6 +3,10 @@
 
 ![image](https://github.com/newtype0096/whisper_gui/assets/25603999/6f60b127-202e-4813-9612-ca4c7203981d)
 
+### Features
+- Media file transcribtion
+- Task queue
+
 ### Setup
 You need to install whisper
 
