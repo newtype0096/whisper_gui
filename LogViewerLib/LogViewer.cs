@@ -274,7 +274,8 @@ namespace LogViewerLib
                         //not an empty line. Add the time
                         Run timeRun = new Run(styledString.Created.ToString($"{TimeStampFormat}  "))
                         {
-                            Foreground = Brushes.DimGray
+                            Foreground = Brushes.White,
+                            FontWeight = FontWeights.Bold
                         };
                         styledParagraph.Inlines.Add(timeRun);
                     }

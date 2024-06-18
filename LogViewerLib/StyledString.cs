@@ -162,7 +162,7 @@ namespace LogViewerLib
                 case StringStyleEnum.label:
                     inline = new Run(lineString)
                     {
-                        Foreground = Brushes.MidnightBlue
+                        Foreground = Brushes.LightGreen
                     };
                     break;
                 case StringStyleEnum.header1:

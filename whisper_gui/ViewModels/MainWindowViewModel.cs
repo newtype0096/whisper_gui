@@ -5,7 +5,6 @@ using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,6 +22,13 @@ namespace whisper_gui.ViewModels
         public List<WhisperModels> WhisperModels { get; }
         public List<WhisperDevices> WhisperDevices { get; }
 
+        private string _optionSummary;
+        public string OptionSummary
+        {
+            get => _optionSummary;
+            set => SetProperty(ref _optionSummary, value);
+        }
+
         private WhisperLanguages _selectedLanguage;
         public WhisperLanguages SelectedLanguage
         {
@@ -33,8 +39,8 @@ namespace whisper_gui.ViewModels
 
                 GlobalData.Options.SelectedLanguage = value;
                 GlobalData.Options.SaveFile();
+                OptionSummary = $"Whisper Options - {GlobalData.Options.SelectedLanguage}, {GlobalData.Options.SelectedModel}, {GlobalData.Options.SelectedDevice}";
             }
-
         }
 
         private WhisperDevices _selectedDevice;
@@ -47,6 +53,7 @@ namespace whisper_gui.ViewModels
 
                 GlobalData.Options.SelectedDevice = value;
                 GlobalData.Options.SaveFile();
+                OptionSummary = $"Whisper Options - {GlobalData.Options.SelectedLanguage}, {GlobalData.Options.SelectedModel}, {GlobalData.Options.SelectedDevice}";
             }
         }
 
@@ -60,6 +67,7 @@ namespace whisper_gui.ViewModels
 
                 GlobalData.Options.SelectedModel = value;
                 GlobalData.Options.SaveFile();
+                OptionSummary = $"Whisper Options - {GlobalData.Options.SelectedLanguage}, {GlobalData.Options.SelectedModel}, {GlobalData.Options.SelectedDevice}";
             }
         }
 
@@ -127,6 +135,7 @@ namespace whisper_gui.ViewModels
             WhisperModels = new List<WhisperModels>(Enum.GetValues(typeof(WhisperModels)).Cast<WhisperModels>());
             WhisperDevices = new List<WhisperDevices>(Enum.GetValues(typeof(WhisperDevices)).Cast<WhisperDevices>());
 
+            OptionSummary = $"Whisper Options - {GlobalData.Options.SelectedLanguage}, {GlobalData.Options.SelectedModel}, {GlobalData.Options.SelectedDevice}";
             SelectedLanguage = GlobalData.Options.SelectedLanguage;
             SelectedModel = GlobalData.Options.SelectedModel;
             SelectedDevice = GlobalData.Options.SelectedDevice;
