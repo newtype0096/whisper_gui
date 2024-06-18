@@ -26,7 +26,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <ui:TitleBar Title="Whiser GUI" Grid.Row="0" />
+        <ui:TitleBar Title="Whisper GUI" Grid.Row="0" />
 
         <ScrollViewer Grid.Row="1">
             <Grid>
