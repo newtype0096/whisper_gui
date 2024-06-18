@@ -25,7 +25,9 @@ namespace whisper_gui.Views
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainWindowViewModel();
+
+            DataContext = new MainWindowViewModel();
+            GlobalData.SetLogViewer(LogViewer);
         }
     }
 }

@@ -99,6 +99,7 @@ namespace whisper_gui.ViewModels
         public bool IsStartButtonEnabled => !Started;
         public bool IsStopButtonEnabled => Started;
 
+        public RelayCommand ClosedCommand { get; }
         public RelayCommand BrowsePythonPathCommand { get; }
         public RelayCommand BrowseOutputDirectoryCommand { get; }
         public RelayCommand OpenFilesCommand { get; }
@@ -115,11 +116,17 @@ namespace whisper_gui.ViewModels
             PythonPath = GlobalData.Options.PythonPath;
             OutputDirectory = GlobalData.Options.OutputDirectory;
 
+            ClosedCommand = new RelayCommand(OnClosed);
             BrowsePythonPathCommand = new RelayCommand(OnBrowsePythonPath);
             BrowseOutputDirectoryCommand = new RelayCommand(OnBrowseOutputDirectory);
             OpenFilesCommand = new RelayCommand(OnOpenFiles);
             StartCommand = new RelayCommand(OnStart);
             StopCommand = new RelayCommand(OnStop);
+        }
+
+        private void OnClosed()
+        {
+            OnStop();
         }
 
         private void OnBrowsePythonPath()
@@ -182,7 +189,7 @@ namespace whisper_gui.ViewModels
         {
             Started = false;
 
-            _taskManager.Join();
+            _taskManager?.Join();
         }
 
         private static void TaskManagerThreadProc(object param)

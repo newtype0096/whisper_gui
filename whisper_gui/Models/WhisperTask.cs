@@ -28,13 +28,6 @@ namespace whisper_gui.Models
             set => SetProperty(ref _status, value);
         }
 
-        private string _message;
-        public string Message
-        {
-            get => _message;
-            set => SetProperty(ref _message, value);
-        }
-
         public void Start()
         {
             Status = Status.Processing;
@@ -43,7 +36,10 @@ namespace whisper_gui.Models
 
         public void Stop()
         {
-            _process?.Kill();
+            if (_process?.HasExited == true)
+            {
+                _process?.Kill();
+            }
             _process?.Dispose();
             _process = null;
         }
@@ -61,16 +57,23 @@ namespace whisper_gui.Models
                 UseShellExecute = false,
                 RedirectStandardError = true
             };
+            GlobalData.LogViewer.WriteLine($"{startInfo.FileName} {startInfo.Arguments}");
 
             _process = new Process();
             _process.StartInfo = startInfo;
+            _process.EnableRaisingEvents = true;
 
             _process.ErrorDataReceived += (s, e) =>
             {
                 if (!string.IsNullOrEmpty(e.Data))
                 {
-                    Message = e.Data;
+                    GlobalData.LogViewer.WriteLine(e.Data);
                 }
+            };
+
+            _process.Exited += (s, e) =>
+            {
+                Status = Status.Completed;
             };
 
             _process.Start();
