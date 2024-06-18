@@ -10,8 +10,8 @@
                  xmlns:viewModels="clr-namespace:whisper_gui.ViewModels"
                  x:Name="FluentWindow"
                  Title="MainWindow"
-                 Width="750"
-                 Height="800"
+                 Width="800"
+                 Height="600"
                  WindowStyle="None"
                  mc:Ignorable="d">
     <bh:Interaction.Triggers>
