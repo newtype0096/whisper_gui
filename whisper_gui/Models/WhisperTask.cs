@@ -36,16 +36,27 @@ namespace whisper_gui.Models
 
         public void Stop()
         {
-            if (_process?.HasExited != true)
+            try
             {
-                _process?.Kill();
+                if (_process?.HasExited != true)
+                {
+                    _process?.Kill();
+                }
+                _process?.Dispose();
             }
-            _process?.Dispose();
+            catch { }
             _process = null;
         }
 
         private void RunWhisper()
         {
+            if (!File.Exists(GlobalData.Options.PythonPath))
+            {
+                GlobalData.LogViewer.WriteLine($"Can not find python.exe", LogViewerLib.StringStyleEnum.errorText);
+                Status = Status.Failed;
+                return;
+            }
+
             string arguments = $"-m whisper \"{FileName}\" " +
                 $"--language {GlobalData.Options.SelectedLanguage} " +
                 $"--model {GlobalData.Options.SelectedModel} " +
@@ -96,9 +107,17 @@ namespace whisper_gui.Models
                 Status = Status.Completed;
             };
 
-            _process.Start();
-            _process.BeginErrorReadLine();
-            _process.BeginOutputReadLine();
+            if (_process.Start())
+            {
+                _process.BeginErrorReadLine();
+                _process.BeginOutputReadLine();
+            }
+            else
+            {
+                GlobalData.LogViewer.WriteLine($"Process execution failed", LogViewerLib.StringStyleEnum.errorText);
+                GlobalData.LogViewer.WriteLine($"------------------------------------------", LogViewerLib.StringStyleEnum.errorText);
+                Status = Status.Failed;
+            }
         }
     }
 }
