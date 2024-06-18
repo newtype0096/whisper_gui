@@ -227,6 +227,7 @@ namespace whisper_gui.ViewModels
             _taskManager.Start(this);
 
             Started = true;
+            GlobalData.LogViewer.WriteLine("----- Started -----", LogViewerLib.StringStyleEnum.header1);
         }
 
         private void OnStop()
@@ -234,6 +235,13 @@ namespace whisper_gui.ViewModels
             Started = false;
 
             _taskManager?.Join();
+
+            foreach (var task in WhisperTasks)
+            {
+                task.Stop();
+                task.Status = Status.Pending;
+            }
+            GlobalData.LogViewer.WriteLine("----- Stopped -----", LogViewerLib.StringStyleEnum.header1);
         }
 
         private void OnDelete(WhisperTask task)
@@ -274,18 +282,6 @@ namespace whisper_gui.ViewModels
                 }
 
                 Thread.Sleep(100);
-            }
-
-            lock (vm._cs)
-            {
-                foreach (var task in vm.WhisperTasks)
-                {
-                    if (!task.Status.Equals(Status.Completed))
-                    {
-                        task.Stop();
-                        task.Status = Status.Stopped;
-                    }
-                }
             }
         }
     }

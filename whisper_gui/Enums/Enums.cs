@@ -11,8 +11,7 @@ namespace whisper_gui.Enums
         Pending,
         Processing,
         Completed,
-        Failed,
-        Stopped
+        Failed
     }
 
     public enum WhisperOutputFormats
