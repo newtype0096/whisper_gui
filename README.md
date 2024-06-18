@@ -1,7 +1,7 @@
 # <p align="center">whisper_gui</p>
 <p align="center">A simple GUI for whisper with WPF</p>
 
-![image](https://github.com/newtype0096/whisper_gui/assets/25603999/6ec4488e-08d1-45fa-a3df-4c886ecdd472)
+![image](https://github.com/newtype0096/whisper_gui/assets/25603999/6f60b127-202e-4813-9612-ca4c7203981d)
 
 ### Setup
 You need to install whisper
