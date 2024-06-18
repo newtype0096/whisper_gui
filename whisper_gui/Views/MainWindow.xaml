@@ -7,8 +7,8 @@
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
                  xmlns:viewModels="clr-namespace:whisper_gui.ViewModels"
                  Title="MainWindow"
-                 Width="800"
-                 Height="450"
+                 Width="600"
+                 Height="500"
                  d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
                  WindowStyle="None"
                  mc:Ignorable="d">
@@ -65,6 +65,33 @@
                                   HorizontalAlignment="Right"
                                   ItemsSource="{Binding WhisperModels}"
                                   SelectedItem="{Binding SelectedModel, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </ui:Card>
+
+                <ui:Card IsEnabled="{Binding IsOptionEnabled}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon FontSize="24" Symbol="CodePyRectangle16" />
+                            <Label Margin="10,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Content="Python Path"
+                                   FontWeight="Bold" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="{Binding PythonPath, UpdateSourceTrigger=PropertyChanged}" />
+                            <ui:Button Margin="10,0,0,0"
+                                       HorizontalAlignment="Right"
+                                       Command="{Binding BrowsePythonPathCommand}"
+                                       Content="..." />
+                        </StackPanel>
                     </Grid>
                 </ui:Card>
 
@@ -147,7 +174,7 @@
                                 <ui:GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Button Content="Delete" />
+                                            <ui:Button Appearance="Danger" Content="Delete" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ui:GridViewColumn.CellTemplate>

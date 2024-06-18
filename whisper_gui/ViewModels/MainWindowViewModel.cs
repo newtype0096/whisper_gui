@@ -5,8 +5,9 @@ using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using whisper_gui.Enums;
 using whisper_gui.Models;
@@ -15,28 +16,63 @@ namespace whisper_gui.ViewModels
 {
     public class MainWindowViewModel : ObservableObject
     {
+        private Thread _taskManager;
+        private object _cs = new object();
+
         public List<WhisperLanguages> WhisperLanguages { get; }
         public List<WhisperModels> WhisperModels { get; }
 
-        private WhisperLanguages _selectedLanguage = Enums.WhisperLanguages.Japanese;
+        private WhisperLanguages _selectedLanguage;
         public WhisperLanguages SelectedLanguage
         {
             get => _selectedLanguage;
-            set => SetProperty(ref _selectedLanguage, value);
+            set
+            {
+                SetProperty(ref _selectedLanguage, value);
+
+                GlobalData.Options.SelectedLanguage = value;
+                GlobalData.Options.SaveFile();
+            }
+
         }
 
-        private WhisperModels _selectedModel = Enums.WhisperModels.medium;
+        private WhisperModels _selectedModel;
         public WhisperModels SelectedModel
         {
             get => _selectedModel;
-            set => SetProperty(ref _selectedModel, value);
+            set
+            {
+                SetProperty(ref _selectedModel, value);
+
+                GlobalData.Options.SelectedModel = value;
+                GlobalData.Options.SaveFile();
+            }
+        }
+
+        private string _pythonPath;
+        public string PythonPath
+        {
+            get => _pythonPath;
+            set
+            {
+                SetProperty(ref _pythonPath, value);
+
+                GlobalData.Options.PythonPath = value;
+                GlobalData.Options.SaveFile();
+            }
         }
 
         private string _outputDirectory;
         public string OutputDirectory
         {
             get => _outputDirectory;
-            set => SetProperty(ref _outputDirectory, value);
+            set
+            {
+                SetProperty(ref _outputDirectory, value);
+
+                GlobalData.Options.OutputDirectory = value;
+                GlobalData.Options.SaveFile();
+            }
         }
 
         private ObservableCollection<WhisperTask> _whisperTasks = new ObservableCollection<WhisperTask>();
@@ -63,6 +99,7 @@ namespace whisper_gui.ViewModels
         public bool IsStartButtonEnabled => !Started;
         public bool IsStopButtonEnabled => Started;
 
+        public RelayCommand BrowsePythonPathCommand { get; }
         public RelayCommand BrowseOutputDirectoryCommand { get; }
         public RelayCommand OpenFilesCommand { get; }
         public RelayCommand StartCommand { get; }
@@ -72,12 +109,30 @@ namespace whisper_gui.ViewModels
         {
             WhisperLanguages = new List<WhisperLanguages>(Enum.GetValues(typeof(WhisperLanguages)).Cast<WhisperLanguages>());
             WhisperModels = new List<WhisperModels>(Enum.GetValues(typeof(WhisperModels)).Cast<WhisperModels>());
-            OutputDirectory = System.IO.Directory.GetCurrentDirectory();
 
+            SelectedLanguage = GlobalData.Options.SelectedLanguage;
+            SelectedModel = GlobalData.Options.SelectedModel;
+            PythonPath = GlobalData.Options.PythonPath;
+            OutputDirectory = GlobalData.Options.OutputDirectory;
+
+            BrowsePythonPathCommand = new RelayCommand(OnBrowsePythonPath);
             BrowseOutputDirectoryCommand = new RelayCommand(OnBrowseOutputDirectory);
             OpenFilesCommand = new RelayCommand(OnOpenFiles);
             StartCommand = new RelayCommand(OnStart);
             StopCommand = new RelayCommand(OnStop);
+        }
+
+        private void OnBrowsePythonPath()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Executable Files (*.exe)|*.exe";
+            openFileDialog.CheckFileExists = true;
+            openFileDialog.CheckPathExists = true;
+            openFileDialog.ValidateNames = true;
+            if (openFileDialog.ShowDialog() == true)
+            {
+                PythonPath = openFileDialog.FileName;
+            }
         }
 
         private void OnBrowseOutputDirectory()
@@ -117,12 +172,44 @@ namespace whisper_gui.ViewModels
 
         private void OnStart()
         {
+            _taskManager = new Thread(TaskManagerThreadProc);
+            _taskManager.Start(this);
+
             Started = true;
         }
 
         private void OnStop()
         {
             Started = false;
+
+            _taskManager.Join();
+        }
+
+        private static void TaskManagerThreadProc(object param)
+        {
+            var vm = (MainWindowViewModel)param;
+
+            while (vm.Started)
+            {
+                WhisperTask task = null;
+                lock (vm._cs)
+                {
+                    if (!vm.WhisperTasks.Any(x => x.Status.Equals(Status.Processing)))
+                    {
+                        task = vm.WhisperTasks.FirstOrDefault(x => x.Status.Equals(Status.Pending));
+                    }
+                }
+
+                if (task != null)
+                {
+                    Task.Run(() =>
+                    {
+                        task.Start();
+                    });
+                }
+
+                Thread.Sleep(100);
+            }
         }
     }
 }

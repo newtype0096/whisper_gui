@@ -13,5 +13,9 @@ namespace whisper_gui
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            GlobalData.Initialize();
+        }
     }
 }
