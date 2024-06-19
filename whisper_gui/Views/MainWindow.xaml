@@ -32,8 +32,8 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="2*" />
                     <RowDefinition />
+                    <RowDefinition Height="200" />
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Margin="15,0,15,0">
